@@ -1,16 +1,5 @@
 FROM ubuntu:noble
 
-RUN echo 'deb http://mirrors.xtom.com.hk/ubuntu/ noble main restricted universe multiverse' > /etc/apt/sources.list && \
-    echo 'deb-src http://mirrors.xtom.com.hk/ubuntu/ noble main restricted universe multiverse' >> /etc/apt/sources.list && \
-    echo 'deb http://mirrors.xtom.com.hk/ubuntu/ noble-security main restricted universe multiverse' >> /etc/apt/sources.list && \
-    echo 'deb-src http://mirrors.xtom.com.hk/ubuntu/ noble-security main restricted universe multiverse' >> /etc/apt/sources.list && \
-    echo 'deb http://mirrors.xtom.com.hk/ubuntu/ noble-updates main restricted universe multiverse' >> /etc/apt/sources.list && \
-    echo 'deb-src http://mirrors.xtom.com.hk/ubuntu/ noble-updates main restricted universe multiverse' >> /etc/apt/sources.list && \
-    echo 'deb http://mirrors.xtom.com.hk/ubuntu/ noble-backports main restricted universe multiverse' >> /etc/apt/sources.list && \
-    echo 'deb-src http://mirrors.xtom.com.hk/ubuntu/ noble-backports main restricted universe multiverse' >> /etc/apt/sources.list && \
-    echo 'deb http://mirrors.xtom.com.hk/ubuntu/ noble-proposed main restricted universe multiverse' >> /etc/apt/sources.list && \
-    echo 'deb-src http://mirrors.xtom.com.hk/ubuntu/ noble-proposed main restricted universe multiverse' >> /etc/apt/sources.list && \
-    rm -f /etc/apt/sources.list.d/ubuntu.sources
 RUN apt update && \
     apt full-upgrade -y && \
     apt autoremove --purge -y && \
