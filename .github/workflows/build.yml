@@ -1,7 +1,7 @@
 on:
   push:
   schedule:
-    - cron: '0 16 * * *'
+    - cron: '0 16 * * 1'
   workflow_dispatch:
 
 name: build
