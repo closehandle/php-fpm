@@ -1,0 +1,60 @@
+FROM ubuntu:noble
+
+RUN echo 'deb http://mirrors.xtom.com.hk/ubuntu/ noble main restricted universe multiverse' > /etc/apt/sources.list && \
+    echo 'deb-src http://mirrors.xtom.com.hk/ubuntu/ noble main restricted universe multiverse' >> /etc/apt/sources.list && \
+    echo 'deb http://mirrors.xtom.com.hk/ubuntu/ noble-security main restricted universe multiverse' >> /etc/apt/sources.list && \
+    echo 'deb-src http://mirrors.xtom.com.hk/ubuntu/ noble-security main restricted universe multiverse' >> /etc/apt/sources.list && \
+    echo 'deb http://mirrors.xtom.com.hk/ubuntu/ noble-updates main restricted universe multiverse' >> /etc/apt/sources.list && \
+    echo 'deb-src http://mirrors.xtom.com.hk/ubuntu/ noble-updates main restricted universe multiverse' >> /etc/apt/sources.list && \
+    echo 'deb http://mirrors.xtom.com.hk/ubuntu/ noble-backports main restricted universe multiverse' >> /etc/apt/sources.list && \
+    echo 'deb-src http://mirrors.xtom.com.hk/ubuntu/ noble-backports main restricted universe multiverse' >> /etc/apt/sources.list && \
+    echo 'deb http://mirrors.xtom.com.hk/ubuntu/ noble-proposed main restricted universe multiverse' >> /etc/apt/sources.list && \
+    echo 'deb-src http://mirrors.xtom.com.hk/ubuntu/ noble-proposed main restricted universe multiverse' >> /etc/apt/sources.list && \
+    rm -f /etc/apt/sources.list.d/ubuntu.sources
+RUN apt update && \
+    apt full-upgrade -y && \
+    apt autoremove --purge -y && \
+    apt install software-properties-common -y
+RUN add-apt-repository ppa:ondrej/php && \
+    apt update && \
+    apt install php7.4 php7.4-bcmath php7.4-cli php7.4-common php7.4-curl php7.4-fpm php7.4-gd php7.4-gmp php7.4-imagick php7.4-imap php7.4-intl php7.4-json php7.4-mbstring php7.4-mysql php7.4-soap php7.4-xml -y
+
+ADD https://downloads.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz /ioncube_loaders_lin_x86-64.tar.gz
+RUN tar xf ioncube_loaders_lin_x86-64.tar.gz && rm -f ioncube_loaders_lin_x86-64.tar.gz && mv -f ioncube/ioncube_loader_lin_7.4.so /usr/lib/php/20190902/ioncube_loader.so && rm -fr ioncube && \
+    echo 'zend_extension = ioncube_loader.so' > /etc/php/7.4/mods-available/ioncube.ini && \
+    ln -fs /etc/php/7.4/mods-available/ioncube.ini /etc/php/7.4/cli/conf.d/00-ioncube.ini && \
+    ln -fs /etc/php/7.4/mods-available/ioncube.ini /etc/php/7.4/fpm/conf.d/00-ioncube.ini
+
+ADD docker-entrypoint.sh /usr/bin/docker-entrypoint.sh
+ADD docker.conf /etc/php/7.4/fpm/pool.d/docker.conf
+RUN sed -E -i 's|^;?date.timezone ?= ?.*|date.timezone = Asia/Shanghai|g' /etc/php/7.4/*/php.ini && \
+    sed -E -i 's|^;?post_max_size ?= ?.*|post_max_size = 100M|g' /etc/php/7.4/*/php.ini && \
+    sed -E -i 's|^;?upload_max_filesize ?= ?.*|upload_max_filesize = 100M|g' /etc/php/7.4/*/php.ini && \
+    sed -E -i 's|^;?max_execution_time ?= ?.*|max_execution_time = 120|g' /etc/php/7.4/*/php.ini && \
+    sed -E -i 's|^;?max_input_time ?= ?.*|max_input_time = 30|g' /etc/php/7.4/*/php.ini && \
+    sed -E -i 's|^;?memory_limit ?= ?.*|memory_limit = 512M|g' /etc/php/7.4/*/php.ini && \
+    sed -E -i 's|^;?mysqli.max_persistent ?= ?.*|mysqli.max_persistent = 8|g' /etc/php/7.4/*/php.ini && \
+    sed -E -i 's|^;?mysqli.reconnect ?= ?.*|mysqli.reconnect = On|g' /etc/php/7.4/*/php.ini && \
+    sed -E -i 's|^;?short_open_tag ?= ?.*|short_open_tag = Off|g' /etc/php/7.4/*/php.ini && \
+    sed -E -i 's|^;?expose_php ?= ?.*|expose_php = Off|g' /etc/php/7.4/*/php.ini && \
+    sed -E -i 's|^;?opcache.enable ?= ?.*|opcache.enable = 1|g' /etc/php/7.4/*/php.ini && \
+    sed -E -i 's|^;?opcache.memory_consumption ?= ?.*|opcache.memory_consumption = 512|g' /etc/php/7.4/*/php.ini && \
+    sed -E -i 's|^;?opcache.interned_strings_buffer ?= ?.*|opcache.interned_strings_buffer = 128|g' /etc/php/7.4/*/php.ini && \
+    sed -E -i 's|^;?opcache.max_accelerated_files ?= ?.*|opcache.max_accelerated_files = 1000000|g' /etc/php/7.4/*/php.ini && \
+    sed -E -i 's|^;?opcache.validate_timestamps ?= ?.*|opcache.validate_timestamps = 0|g' /etc/php/7.4/*/php.ini && \
+    sed -E -i 's|^;?session.save_path ?= ?.*|session.save_path = /tmp|g' /etc/php/7.4/*/php.ini && \
+    sed -E -i 's|^;?session.cookie_lifetime ?= ?.*|session.cookie_lifetime = 86400|g' /etc/php/7.4/*/php.ini
+
+FROM scratch
+COPY --from=0 / /
+
+ENV FPM_BIND=0.0.0.0
+ENV FPM_PORT=9000
+
+ENV FPM_START_SERVERS=8
+ENV FPM_MIN_SPARE_SERVERS=8
+ENV FPM_MAX_SPARE_SERVERS=128
+ENV FPM_CHILDREN=128
+
+ENTRYPOINT ["docker-entrypoint.sh"]
+CMD []
