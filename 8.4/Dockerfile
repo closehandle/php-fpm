@@ -6,7 +6,7 @@ RUN apt update && \
     apt install software-properties-common -y
 RUN add-apt-repository ppa:ondrej/php && \
     apt update && \
-    apt install php8.4 php8.4-bcmath php8.4-cli php8.4-common php8.4-curl php8.4-fpm php8.4-gd php8.4-gmp php8.4-imagick php8.4-imap php8.4-intl php8.4-mbstring php8.4-mysql php8.4-soap php8.4-xml -y
+    apt install php8.4 php8.4-bcmath php8.4-cli php8.4-common php8.4-curl php8.4-fpm php8.4-gd php8.4-gmp php8.4-imagick php8.4-imap php8.4-intl php8.4-mbstring php8.4-mysql php8.4-soap php8.4-xml php8.4-zip -y
 
 ADD https://downloads.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz /ioncube_loaders_lin_x86-64.tar.gz
 RUN tar xf ioncube_loaders_lin_x86-64.tar.gz && rm -f ioncube_loaders_lin_x86-64.tar.gz && mv -f ioncube/ioncube_loader_lin_8.4.so /usr/lib/php/20240924/ioncube_loader.so && rm -fr ioncube && \
