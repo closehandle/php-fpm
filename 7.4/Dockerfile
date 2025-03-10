@@ -6,7 +6,7 @@ RUN apt update && \
     apt install software-properties-common -y
 RUN add-apt-repository ppa:ondrej/php && \
     apt update && \
-    apt install php7.4 php7.4-bcmath php7.4-cli php7.4-common php7.4-curl php7.4-fpm php7.4-gd php7.4-gmp php7.4-imagick php7.4-imap php7.4-intl php7.4-json php7.4-mbstring php7.4-mysql php7.4-soap php7.4-xml php7.4-zip -y
+    apt install php7.4 php7.4-bcmath php7.4-cli php7.4-common php7.4-curl php7.4-fpm php7.4-gd php7.4-gmp php7.4-imagick php7.4-imap php7.4-intl php7.4-json php7.4-mbstring php7.4-mysql php7.4-soap php7.4-xml php7.4-xmlrpc php7.4-zip -y
 
 ADD https://downloads.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz /ioncube_loaders_lin_x86-64.tar.gz
 RUN tar xf ioncube_loaders_lin_x86-64.tar.gz && rm -f ioncube_loaders_lin_x86-64.tar.gz && mv -f ioncube/ioncube_loader_lin_7.4.so /usr/lib/php/20190902/ioncube_loader.so && rm -fr ioncube && \
