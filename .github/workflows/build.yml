@@ -4,6 +4,8 @@ on:
     - cron: '0 16 * * *'
   workflow_dispatch:
 
+name: build
+
 jobs:
   build:
     strategy:
