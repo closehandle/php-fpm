@@ -4,7 +4,7 @@ on:
     - cron: '0 16 * * 1'
   workflow_dispatch:
 
-name: build
+name: GitHub Container Registry
 
 jobs:
   build:
@@ -23,19 +23,23 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Docker Hub
+      - name: Docker Login
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Docker Build
+      - name: Docker Build and Push
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: closehandle/php-fpm:${{ matrix.version }}
+          tags: ghcr.io/closehandle/php-fpm:${{ matrix.version }}
           context: ${{ matrix.version }}
 
 concurrency:
   group: ${{ github.workflow }}
   cancel-in-progress: true
+
+permissions:
+  packages: write
