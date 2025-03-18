@@ -8,12 +8,6 @@ RUN add-apt-repository ppa:ondrej/php && \
     apt update && \
     apt install php8.0 php8.0-bcmath php8.0-cli php8.0-common php8.0-curl php8.0-fpm php8.0-gd php8.0-gmp php8.0-imagick php8.0-imap php8.0-intl php8.0-mbstring php8.0-mysql php8.0-soap php8.0-xml php8.0-xmlrpc php8.0-zip -y
 
-ADD https://downloads.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz /ioncube_loaders_lin_x86-64.tar.gz
-RUN tar xf ioncube_loaders_lin_x86-64.tar.gz && rm -f ioncube_loaders_lin_x86-64.tar.gz && mv -f ioncube/ioncube_loader_lin_8.0.so /usr/lib/php/20200930/ioncube_loader.so && rm -fr ioncube && \
-    echo 'zend_extension = ioncube_loader.so' > /etc/php/8.0/mods-available/ioncube.ini && \
-    ln -fs /etc/php/8.0/mods-available/ioncube.ini /etc/php/8.0/cli/conf.d/00-ioncube.ini && \
-    ln -fs /etc/php/8.0/mods-available/ioncube.ini /etc/php/8.0/fpm/conf.d/00-ioncube.ini
-
 ADD docker-entrypoint.sh /usr/bin/docker-entrypoint.sh
 ADD docker.conf /etc/php/8.0/fpm/pool.d/docker.conf
 RUN sed -E -i 's|^;?date.timezone ?= ?.*|date.timezone = Asia/Shanghai|g' /etc/php/8.0/*/php.ini && \
