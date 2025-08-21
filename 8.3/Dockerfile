@@ -1,12 +1,15 @@
-FROM ubuntu:noble
+FROM debian:latest
 
 RUN apt update && \
     apt full-upgrade -y && \
     apt autoremove --purge -y && \
-    apt install software-properties-common -y
-RUN add-apt-repository ppa:ondrej/php && \
+    apt install ca-certificates lsb-release curl -y && \
+    curl -fsSLo /tmp/debsuryorg-archive-keyring.deb https://packages.sury.org/debsuryorg-archive-keyring.deb && \
+    dpkg -i /tmp/debsuryorg-archive-keyring.deb && \
+    echo "deb [signed-by=/usr/share/keyrings/debsuryorg-archive-keyring.gpg] https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list && \
     apt update && \
-    apt install php8.3 php8.3-bcmath php8.3-cli php8.3-common php8.3-curl php8.3-fpm php8.3-gd php8.3-gmp php8.3-imagick php8.3-imap php8.3-intl php8.3-mbstring php8.3-mysql php8.3-soap php8.3-xml php8.3-xmlrpc php8.3-zip -y
+    apt install php8.3 php8.3-bcmath php8.3-cli php8.3-common php8.3-curl php8.3-fpm php8.3-gd php8.3-gmp php8.3-imagick php8.3-imap php8.3-intl php8.3-mbstring php8.3-mysql php8.3-soap php8.3-xml php8.3-xmlrpc php8.3-zip -y && \
+    rm -fr /var/lib/apt/lists/*
 
 ADD https://downloads.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz /ioncube_loaders_lin_x86-64.tar.gz
 RUN tar xf ioncube_loaders_lin_x86-64.tar.gz && rm -f ioncube_loaders_lin_x86-64.tar.gz && mv -f ioncube/ioncube_loader_lin_8.3.so /usr/lib/php/20230831/ioncube_loader.so && rm -fr ioncube && \

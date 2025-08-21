@@ -1,12 +1,15 @@
-FROM ubuntu:noble
+FROM debian:latest
 
 RUN apt update && \
     apt full-upgrade -y && \
     apt autoremove --purge -y && \
-    apt install software-properties-common -y
-RUN add-apt-repository ppa:ondrej/php && \
+    apt install ca-certificates lsb-release curl -y && \
+    curl -fsSLo /tmp/debsuryorg-archive-keyring.deb https://packages.sury.org/debsuryorg-archive-keyring.deb && \
+    dpkg -i /tmp/debsuryorg-archive-keyring.deb && \
+    echo "deb [signed-by=/usr/share/keyrings/debsuryorg-archive-keyring.gpg] https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list && \
     apt update && \
-    apt install php7.4 php7.4-bcmath php7.4-cli php7.4-common php7.4-curl php7.4-fpm php7.4-gd php7.4-gmp php7.4-imagick php7.4-imap php7.4-intl php7.4-json php7.4-mbstring php7.4-mysql php7.4-soap php7.4-xml php7.4-xmlrpc php7.4-zip -y
+    apt install php7.4 php7.4-bcmath php7.4-cli php7.4-common php7.4-curl php7.4-fpm php7.4-gd php7.4-gmp php7.4-imagick php7.4-imap php7.4-intl php7.4-json php7.4-mbstring php7.4-mysql php7.4-soap php7.4-xml php7.4-xmlrpc php7.4-zip -y && \
+    rm -fr /var/lib/apt/lists/*
 
 ADD https://downloads.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz /ioncube_loaders_lin_x86-64.tar.gz
 RUN tar xf ioncube_loaders_lin_x86-64.tar.gz && rm -f ioncube_loaders_lin_x86-64.tar.gz && mv -f ioncube/ioncube_loader_lin_7.4.so /usr/lib/php/20190902/ioncube_loader.so && rm -fr ioncube && \

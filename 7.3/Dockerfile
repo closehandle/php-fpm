@@ -1,12 +1,15 @@
-FROM ubuntu:noble
+FROM debian:latest
 
 RUN apt update && \
     apt full-upgrade -y && \
     apt autoremove --purge -y && \
-    apt install software-properties-common -y
-RUN add-apt-repository ppa:ondrej/php && \
+    apt install ca-certificates lsb-release curl -y && \
+    curl -fsSLo /tmp/debsuryorg-archive-keyring.deb https://packages.sury.org/debsuryorg-archive-keyring.deb && \
+    dpkg -i /tmp/debsuryorg-archive-keyring.deb && \
+    echo "deb [signed-by=/usr/share/keyrings/debsuryorg-archive-keyring.gpg] https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list && \
     apt update && \
-    apt install php7.3 php7.3-bcmath php7.3-cli php7.3-common php7.3-curl php7.3-fpm php7.3-gd php7.3-gmp php7.3-imagick php7.3-imap php7.3-intl php7.3-json php7.3-mbstring php7.3-mysql php7.3-soap php7.3-xml php7.3-xmlrpc php7.3-zip -y
+    apt install php7.3 php7.3-bcmath php7.3-cli php7.3-common php7.3-curl php7.3-fpm php7.3-gd php7.3-gmp php7.3-imagick php7.3-imap php7.3-intl php7.3-json php7.3-mbstring php7.3-mysql php7.3-soap php7.3-xml php7.3-xmlrpc php7.3-zip -y && \
+    rm -fr /var/lib/apt/lists/*
 
 ADD https://downloads.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz /ioncube_loaders_lin_x86-64.tar.gz
 RUN tar xf ioncube_loaders_lin_x86-64.tar.gz && rm -f ioncube_loaders_lin_x86-64.tar.gz && mv -f ioncube/ioncube_loader_lin_7.3.so /usr/lib/php/20180731/ioncube_loader.so && rm -fr ioncube && \
