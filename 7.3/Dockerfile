@@ -6,6 +6,7 @@ RUN apt update && \
     apt install ca-certificates lsb-release curl -y && \
     curl -fsSLo /tmp/debsuryorg-archive-keyring.deb https://packages.sury.org/debsuryorg-archive-keyring.deb && \
     dpkg -i /tmp/debsuryorg-archive-keyring.deb && \
+    rm -f /tmp/debsuryorg-archive-keyring.deb && \
     echo "deb [signed-by=/usr/share/keyrings/debsuryorg-archive-keyring.gpg] https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list && \
     apt update && \
     apt install php7.3 php7.3-bcmath php7.3-cli php7.3-common php7.3-curl php7.3-fpm php7.3-gd php7.3-gmp php7.3-imagick php7.3-imap php7.3-intl php7.3-json php7.3-mbstring php7.3-mysql php7.3-soap php7.3-xml php7.3-xmlrpc php7.3-zip -y && \
