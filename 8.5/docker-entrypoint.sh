@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-cat << EOF > /etc/php/8.4/fpm/pool.d/www.conf
+cat << EOF > /etc/php/8.5/fpm/pool.d/www.conf
 [www]
 user = root
 group = root
@@ -16,4 +16,4 @@ request_terminate_timeout = 120
 request_slowlog_timeout = 0
 EOF
 
-exec php-fpm8.4 -R
+exec php-fpm8.5 -R
