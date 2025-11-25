@@ -7,6 +7,7 @@ build:
 	docker builder build -f 8.2/Dockerfile -t closehandle/php:8.2 --network host 8.2
 	docker builder build -f 8.3/Dockerfile -t closehandle/php:8.3 --network host 8.3
 	docker builder build -f 8.4/Dockerfile -t closehandle/php:8.4 --network host 8.4
+	docker builder build -f 8.5/Dockerfile -t closehandle/php:8.5 --network host 8.5
 	docker builder prune -af
 
 clean:
