@@ -40,6 +40,7 @@ RUN sed -E -i 's|^;?date.timezone ?= ?.*|date.timezone = Asia/Shanghai|g' /etc/p
     sed -E -i 's|^;?session.gc_probability ?= ?.*|session.gc_probability = 1|g' /etc/php/8.1/*/php.ini && \
     sed -E -i 's|^;?session.gc_divisor ?= ?.*|session.gc_divisor = 1000|g' /etc/php/8.1/*/php.ini && \
     sed -E -i 's|^;?session.gc_maxlifetime ?= ?.*|session.gc_maxlifetime = 1800|g' /etc/php/8.1/*/php.ini && \
+    sed -E -i 's|^;?session.use_strict_mode ?= ?.*|session.use_strict_mode = 1|g' /etc/php/8.1/*/php.ini && \
     sed -E -i 's|^;?session.upload_progress.enabled ?= ?.*|session.upload_progress.enabled = Off|g' /etc/php/8.1/*/php.ini
 
 FROM scratch
